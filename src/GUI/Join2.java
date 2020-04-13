@@ -16,7 +16,7 @@ import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
 import DB.LoginDAO;
-import TCP.ClientC;
+import TCPClient.ClientC;
 
 public class Join2 extends JFrame {
 

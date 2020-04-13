@@ -8,7 +8,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
-import TCP.ServerC;
+import TCPServer.ServerC;
 
 public class SongDAO {
 
@@ -45,10 +45,8 @@ public class SongDAO {
 	}
 
 	
-//	public ArrayList<DTO> tableList() {
 	public ArrayList<String[]> tableList() {
 		ArrayList<String[]> list = new ArrayList<>();
-		String list3[] = new String[5];
 		String sql = "select * from song";
 		if (connect()) {
 			try {
@@ -63,27 +61,16 @@ public class SongDAO {
 						dto.setGenre(rs.getString("genre"));
 						dto.setAlbum(rs.getString("album"));
 						
-//						list.add(dto);
-						list3[0] = dto.getNo();
-						list3[1] = dto.getTitle();
-						list3[2] = dto.getName();
-						list3[3] = dto.getGenre();
-						list3[4] = dto.getAlbum();
 						System.out.println(dto.getTitle() + " ■■■■■");
 						
 						list.add(dto.saveSong());
 					}
 				}
-//				return list;
-//				return list3;
 				return list;
 			} catch (SQLException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
-//		return list;
-//		return list3;
 		return list;
 	}
 

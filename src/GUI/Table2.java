@@ -13,7 +13,7 @@ import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
-import TCP.ClientC;
+import TCPClient.ClientC;
 
 public class Table2 extends JFrame {
 

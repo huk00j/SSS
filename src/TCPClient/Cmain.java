@@ -1,4 +1,4 @@
-package TCP;
+package TCPClient;
 
 import java.io.IOException;
 import java.net.Socket;
