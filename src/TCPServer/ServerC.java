@@ -1,6 +1,5 @@
 package TCPServer;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectOutputStream;
@@ -8,7 +7,6 @@ import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.ArrayList;
 import java.util.Random;
 
 import DB.LoginDAO;
@@ -29,10 +27,8 @@ public class ServerC extends Thread {
 	ObjectOutputStream oos; // 직렬화
 
 	// ---- 2개 port 사용 ---------------------------------------------
-	ServerSocket Nserver; // 전역 변수로 둬야 밑줄이 사라짐. ex) never close.
 	ServerSocket Oserver;
 
-	Socket Nsocket = null;
 	Socket Osocket = null;
 
 	Random r = new Random();
@@ -40,70 +36,40 @@ public class ServerC extends Thread {
 
 	ServerC(Socket socket) {
 		this.socket = socket;
-
-		socketSetting();	// 소켓 셋팅.
-
+		bridge();
 		run();
 	}
 
-	private void socketSetting() {
+	@Override
+	public void run() {
+		
+	}
+
+	private void socketSetting() {	// ServerO 소켓 만들어놓고 포트 번호 생성.
 		new Thread(new Runnable() {
 
 			@Override
 			public void run() {
 				try {
-					Nserver = new ServerSocket();
+					int objectN = 9000 + r.nextInt(998);
 					Oserver = new ServerSocket();
-					
-					int normalN = 9000 + r.nextInt(498);
-					int objectN = 9500 + r.nextInt(498);
-					
-					Nserver.bind(new InetSocketAddress("10.0.0.120", normalN));
 					Oserver.bind(new InetSocketAddress("10.0.0.120", objectN));
-
-					Streamset(normalN, objectN);
-				
+					
+					forkSO();
+					
+					String qq = String.valueOf(objectN);
+					output = socket.getOutputStream();
+					output.write(qq.getBytes());
+					
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
-
 			}
 		}).start();
 
 	}
 
-	private void Streamset(int normalN, int objectN) {
-		try {
-			String pp = String.valueOf(normalN);
-			String qq = String.valueOf(objectN);
-			String oo = pp + "/" + qq;
-
-			output = socket.getOutputStream();
-			output.write(oo.getBytes());
-
-		} catch (IOException e1) {
-			e1.printStackTrace();
-		}
-	}
-
-	private void forkN() throws IOException {
-		new Thread(new Runnable() {
-			
-			@Override
-			public void run() {
-				try {
-					Nsocket = Nserver.accept();
-					new ServerN(Nsocket);
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-				
-			}
-		}).start();
-
-	}
-
-	private void forkO() throws IOException {
+	private void forkSO() throws IOException {	// Object Server.
 		new Thread(new Runnable() {
 			
 			@Override
@@ -114,26 +80,15 @@ public class ServerC extends Thread {
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
-				
 			}
 		}).start();
 		
 	}
 
-	@Override
-	public void run() {
-		try {
-			bridge();
-			forkN();
-			forkO();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
 
 //================================= 밑으로는 명령문. ==========================================	
 	
-	public void bridge() {
+	public void bridge() {	// normal 명령어 받는 곳.		//일단 serverO로 이동.
 		try {
 			input = socket.getInputStream();
 			byte bb[] = new byte[100];
@@ -145,11 +100,15 @@ public class ServerC extends Thread {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-	}
+	}	
 
-	private void joincode(String jj) {
+	private void joincode(String jj) {	// 명령어 분류하는 곳.	// //일단 serverO로 이동.
 		switch (jj) {
-		case "노래목록불러오기":
+		case "메인프레임":
+			socketSetting();
+			break;
+			
+/*		case "노래목록불러오기":
 			sDAO = new SongDAO(this); // 여기에 dao 객체 생성.
 			ArrayList<String[]> slist = sDAO.tableList();
 
@@ -165,11 +124,11 @@ public class ServerC extends Thread {
 
 			} catch (IOException e) {
 				e.printStackTrace();
-			}
+			}	
 //★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆
 
 			this.check = "노래목록수락";
-			break;
+			break;	*/
 		case "회원가입신청":
 			this.check = "회원가입수락";
 			break;
@@ -179,6 +138,6 @@ public class ServerC extends Thread {
 			break;
 		}
 
-	}
+	}	
 
 }

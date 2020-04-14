@@ -14,6 +14,7 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
 import TCPClient.ClientC;
+import TCPClient.ClientO;
 
 public class Table2 extends JFrame {
 
@@ -30,10 +31,11 @@ public class Table2 extends JFrame {
 	private final JTextField textField_1 = new JTextField();
 	private final JButton btnNewButton = new JButton("로그인");
 	private final JButton btnNewButton_1 = new JButton("회원가입");
+	private Table2 tt;
 
 //	SongDAO dao = new SongDAO();
 	ClientC Cc = null;
-	
+	ClientO Co = null;
 
 	/**
 	 * Launch the application.
@@ -53,12 +55,16 @@ public class Table2 extends JFrame {
 
 	/**
 	 * Create the frame.
-	 * @param ccenter 
+	 * @param clientO 
+	 * @param clientC 
 	 */
-	public Table2(ClientC ccenter) {
-		this.Cc = ccenter;
+	
+	
+	public Table2(ClientC ClientC, ClientO clientO) {
+		this.Cc = ClientC;
+		this.Co = clientO;
+		this.tt = this;	// 회원가입시 override 때문에 this가 ActionListner가 나오기 때문.
 		
-				
 		table();
 
 		textField_1.setBounds(89, 88, 116, 28);
@@ -108,15 +114,17 @@ public class Table2 extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				String jj = "회원가입신청";
-				Cc.send(jj);
-				
+//				Cc.send(jj);	// 굳이 DB까지 갈 필요 없으니 ClientC로 보내지 않고, 여기서 객체 생성.
+				new Join2(tt);	// this 하면 액션리스너 자체가 보내진다??? 엥?
 			}
 		});
 	}
 
 	public void table() {
+		Co.Taddress(this);	// ClientO 한테 Table2 주소 알려주기.
+		
 		String songlist = "노래목록불러오기";
-		Cc.send(songlist);
+		Co.sendO(songlist);
 		
 	//-------------------------------------------------
 		

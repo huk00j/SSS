@@ -35,9 +35,10 @@ public class Join2 extends JFrame {
 	JLabel lblNewLabel_7, lblNewLabel_8, lblNewLabel_9, lblNewLabel_10;
 	JLabel lblNewLabel_11;
 
-	
 	ClientC Cc = null;
-//	ServerC sc = null;	// 굳이 서버를 알 필요 x.
+	Table2 table = null;
+	
+	ActionListener action = null; //?????
 	
 	/**
 	 * Create the frame.
@@ -46,9 +47,11 @@ public class Join2 extends JFrame {
 	 * 
 	 * @return
 	 */
-	public Join2(ClientC cc) {
-		this.Cc = cc;
-		
+//	public Join2(ClientC cc) {
+//		this.Cc = cc;
+
+	public Join2(Table2 tt) {
+		this.table = tt;
 //		this.setVisible(true);
 //		this.setDefaultCloseOperation(this.DISPOSE_ON_CLOSE);
 
@@ -182,10 +185,9 @@ public class Join2 extends JFrame {
 				
 				String idcc = "계정중복확인/";
 				String idccc = txtAsdfdsfd.getText();
-				Cc.send(idcc+idccc);
+//				Cc.send(idcc+idccc);
 				
 				//------------------------------------------------------
-				
 				
 				String in = txtAsdfdsfd.getText();
 
@@ -297,7 +299,7 @@ public class Join2 extends JFrame {
 				}
 
 			}
-
+			//실험용
 			@Override
 			public void keyPressed(KeyEvent e) {
 			}

@@ -8,18 +8,18 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
-import TCPServer.ServerC;
-
 public class SongDAO {
 
 	private Connection conn;
 	private Statement stmt; // 텍스트 SQL 호출.
 	private PreparedStatement ppsm;
 	private ResultSet rs; // 튜플을 순차적으로 가리킨다.
-	ServerC Sc = null;
+//	ServerC Sc = null;
+	private static SongDAO sDAO = null;
 
-	public SongDAO(ServerC serverC) {
-		Sc = serverC;
+	
+	public SongDAO() {
+//		Sc = serverC;
 		start();
 	}
 
@@ -44,8 +44,8 @@ public class SongDAO {
 		return error;
 	}
 
-	
 	public ArrayList<String[]> tableList() {
+		System.out.println("333333333333333333");
 		ArrayList<String[]> list = new ArrayList<>();
 		String sql = "select * from song";
 		if (connect()) {
@@ -60,9 +60,9 @@ public class SongDAO {
 						dto.setName(rs.getString("name"));
 						dto.setGenre(rs.getString("genre"));
 						dto.setAlbum(rs.getString("album"));
-						
+
 						System.out.println(dto.getTitle() + " ■■■■■");
-						
+
 						list.add(dto.saveSong());
 					}
 				}
@@ -74,5 +74,11 @@ public class SongDAO {
 		return list;
 	}
 
+	public static SongDAO sigleton() {
+		if (sDAO == null) {
+			sDAO = new SongDAO();
+		}
+		return sDAO;
+	}
 
 }
