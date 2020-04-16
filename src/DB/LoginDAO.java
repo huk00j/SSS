@@ -64,6 +64,25 @@ public class LoginDAO {
 		return 0;
 	}
 
+	
+	public int login(String id, String pw) {
+		if(connect()) {
+			String sql = "select id from login where id = ? and pw = ?";
+			try {
+				ppsm = conn.prepareStatement(sql);
+				ppsm.setString(1, id);
+				ppsm.setString(2, pw);
+				int checklog = ppsm.executeUpdate();
+				return checklog;
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+			
+		}
+		return 0;
+	}
+	
+	
 	public int insertQ(String id, String pw) {
 		if(connect()) {
 			String sql = "insert into login values(?, ?)";

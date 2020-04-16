@@ -27,7 +27,7 @@ public class Join2 extends JFrame {
 
 	private JPanel contentPane;
 
-	public JLabel lblNewLabel_2, lblNewLabel_3, lblNewLabel_4;
+	public JLabel lblNewLabel_2, lblNewLabel_3, lblNewLabel_4;	// 순서 꼬이지 않게 남겨놓기.
 	public JLabel lblNewLabel_20;
 	
 	JTextField textField_1, textField_2;
@@ -112,38 +112,16 @@ public class Join2 extends JFrame {
 		ActionPW2();
 
 		insert();
-//		ins();
 	}
 
 	private void checkA() {
 		
 		lblNewLabel_20 = new JLabel("");
 		lblNewLabel_20.setFont(new Font("굴림", Font.PLAIN, 12));
-//		lblNewLabel_20.setForeground(Color.MAGENTA);
 		lblNewLabel_20.setBounds(50, 75, 150, 15);
-		contentPane.add(lblNewLabel_20);
-		
-//		lblNewLabel_2 = new JLabel("이미 존재하는 계정입니다.");
-//		lblNewLabel_2.setFont(new Font("굴림", Font.PLAIN, 12));
-//		lblNewLabel_2.setForeground(Color.RED);
-//		lblNewLabel_2.setBounds(50, 75, 150, 15);
-//		contentPane.add(lblNewLabel_2);
-//		lblNewLabel_2.setVisible(false);
-//
-//		lblNewLabel_3 = new JLabel("사용 가능한 계정입니다.");
-//		lblNewLabel_3.setFont(new Font("굴림", Font.PLAIN, 12));
-//		lblNewLabel_3.setForeground(Color.BLUE);
-//		lblNewLabel_3.setBounds(50, 75, 140, 15);
-//		contentPane.add(lblNewLabel_3);
-//		lblNewLabel_3.setVisible(false);
-//
-//		lblNewLabel_4 = new JLabel("아이디를 입력하세요.");
-//		lblNewLabel_4.setFont(new Font("굴림", Font.PLAIN, 12));
-//		lblNewLabel_4.setForeground(Color.MAGENTA);
-//		lblNewLabel_4.setBounds(60, 75, 140, 15);
-//		contentPane.add(lblNewLabel_4);
-//		lblNewLabel_4.setVisible(false);
+		contentPane.add(lblNewLabel_20);	
 
+		
 		lblNewLabel_5 = new JLabel("비밀번호가 일치하지 않습니다.");
 		lblNewLabel_5.setFont(new Font("굴림", Font.PLAIN, 12));
 		lblNewLabel_5.setForeground(Color.RED);
@@ -309,7 +287,6 @@ public class Join2 extends JFrame {
 					textField_1.setText("");
 					textField_2.setText("");
 
-//					lblNewLabel_3.setVisible(false); // 파란색 id 글 제거.
 					lblNewLabel_20.setVisible(false);
 					lblNewLabel_6.setVisible(false); // 파란색 pw 글 제거.
 
@@ -317,14 +294,10 @@ public class Join2 extends JFrame {
 
 					if (k == 1) {
 						System.out.println("insert 성공");
+						join2.dispose();
 					} else {
 						System.out.println("insert 실패");
 					}
-					
-//					this.setDefaultCloseOperation(this.DISPOSE_ON_CLOSE);
-//					setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-//					setDefaultCloseOperation(join2.DISPOSE_ON_CLOSE);
-					
 				} else {
 					System.out.println(blankId + "  id");	// ID 입력 칸이 공백인가. true / false.
 					System.out.println(checkId + " checkId");
@@ -336,6 +309,5 @@ public class Join2 extends JFrame {
 		});
 	}
 
-	
 	
 }

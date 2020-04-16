@@ -143,56 +143,32 @@ public class ClientC extends Thread {
 	
 	public void codejoin(String order) {
 
-		switch (order) {
-//		case "아이디공백":
-//			System.out.println("공백 받았습니다!");
-//			join2.lblNewLabel_2.setVisible(false);
-//			join2.lblNewLabel_3.setVisible(false);
-//			join2.lblNewLabel_4.setVisible(true);
-//			break;
-//			
-//		case "0":
-//			join2.checkId = true;
-//			System.out.println("없는 아이디");
-//			join2.lblNewLabel_2.setVisible(false);
-//			join2.lblNewLabel_4.setVisible(false);
-//			join2.lblNewLabel_3.setVisible(true);
-//			break;
-//			
-//		case "1":
-//			join2.checkId = false;
-//			System.out.println("이미 있는 아이디");
-//			join2.lblNewLabel_4.setVisible(false);
-//			join2.lblNewLabel_3.setVisible(false);
-//			join2.lblNewLabel_2.setVisible(true);
-//			break;
-		
-		
-		//------------------------------------------- visible이 아닌 set으로 변경해봅시다.
+		switch (order) { //---------- visible이 아닌 set으로 변경.
 		case "아이디공백":
 			join2.lblNewLabel_20.setText("아이디를 입력하세요.");
 			join2.lblNewLabel_20.setForeground(Color.MAGENTA);
 			break;
-		
 		case "0":
 			join2.checkId = true;
 			join2.lblNewLabel_20.setText("사용 가능한 계정입니다.");
 			join2.lblNewLabel_20.setForeground(Color.BLUE);
 			break;
-		
 		case "1":
 			join2.checkId = false;
 			join2.lblNewLabel_20.setText("이미 사용중인 계정입니다.");
 			join2.lblNewLabel_20.setForeground(Color.RED);
 			break;
 			
-		//------------ 까지 비밀번호 ------------------------
-			
-//		case "회원가입수락":
-//			join2 = new Join2(this);
-//			break;
-
-
+		case "로그인성공":
+			System.out.println("라라라라라라ㅏ라");
+			table2.panel.setVisible(false);
+			table2.panel_1.setVisible(true);
+			break;
+		case "로그인실패":
+			System.out.println("와와와와오아아와와와");
+			table2.lblNewLabel_3.setText("가입하지 않은 아이디거나 잘못된 번호입니다.");
+			table2.lblNewLabel_3.setForeground(Color.RED);
+			break;
 		default:
 			break;
 		}

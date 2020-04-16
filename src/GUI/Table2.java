@@ -1,5 +1,6 @@
 package GUI;
 
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -15,6 +16,7 @@ import javax.swing.table.DefaultTableModel;
 
 import TCPClient.ClientC;
 import TCPClient.ClientO;
+import javax.swing.JList;
 
 public class Table2 extends JFrame {
 
@@ -24,7 +26,7 @@ public class Table2 extends JFrame {
 	JScrollPane tableScroll = new JScrollPane(table);
 
 	private JPanel contentPane;
-	private final JPanel panel = new JPanel();
+	public JPanel panel = new JPanel();	// 클라이언트에서 변경하기 위해 private -> public 변경.
 	private final JLabel lblNewLabel = new JLabel("ID");
 	private final JTextField textField = new JTextField();
 	private final JLabel lblNewLabel_1 = new JLabel("PW");
@@ -36,7 +38,15 @@ public class Table2 extends JFrame {
 //	SongDAO dao = new SongDAO();
 	ClientC Cc = null;
 	ClientO Co = null;
+	
+	
+	private final JPanel panel_2 = new JPanel();
+	private final JList list = new JList();
+	
+	public final JLabel lblNewLabel_3 = new JLabel("");
 
+	public JPanel panel_1;	// 로그인 후에 나오는 창.
+	
 	/**
 	 * Launch the application.
 	 */
@@ -67,9 +77,9 @@ public class Table2 extends JFrame {
 		
 		table();
 
-		textField_1.setBounds(89, 88, 116, 28);
+		textField_1.setBounds(89, 60, 116, 28);
 		textField_1.setColumns(10);
-		textField.setBounds(89, 31, 116, 28);
+		textField.setBounds(89, 20, 116, 28);
 		textField.setColumns(10);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(50, 200, 750, 600);
@@ -80,16 +90,16 @@ public class Table2 extends JFrame {
 
 		tableScroll.setBounds(0, 0, 500, 562);
 		contentPane.add(tableScroll);
-		panel.setBounds(500, 0, 233, 250);
+		panel.setBounds(500, 0, 233, 210);
 
 		contentPane.add(panel);
 		panel.setLayout(null);
-		lblNewLabel.setBounds(34, 30, 43, 28);
+		lblNewLabel.setBounds(34, 20, 43, 28);
 
 		panel.add(lblNewLabel);
 
 		panel.add(textField);
-		lblNewLabel_1.setBounds(32, 84, 37, 35);
+		lblNewLabel_1.setBounds(32, 60, 37, 35);
 
 		panel.add(lblNewLabel_1);
 
@@ -100,11 +110,51 @@ public class Table2 extends JFrame {
 		btnNewButton_1.setBounds(121, 126, 100, 58);
 
 		panel.add(btnNewButton_1);
+		lblNewLabel_3.setBounds(12, 93, 209, 26);
+		lblNewLabel_3.setFont(new Font("굴림", Font.PLAIN, 12));
+		
+		panel.add(lblNewLabel_3);
+		
 		contentPane.setVisible(true);
 
 		this.setVisible(true); // 창 보여주기.
 
 		joinQ();
+		
+		
+	//-------------- 여기부터 로그인 창 -----------------------------------------------
+		panel_1 = new JPanel();
+		panel_1.setBounds(500, 220, 234, 240);
+		contentPane.add(panel_1);
+		panel_1.setLayout(null);
+		panel_2.setToolTipText("??? 님 환영");
+		panel_2.setBounds(12, 10, 210, 30);
+		
+		panel_1.add(panel_2);
+		panel_1.setVisible(false); // 로그인 후 나오는 창.
+		
+		
+		JButton btnNewButton_2 = new JButton("내 정보");
+		btnNewButton_2.setBounds(12, 50, 97, 40);
+		panel_1.add(btnNewButton_2);
+		
+		JButton btnNewButton_3 = new JButton("로그 아웃");
+		btnNewButton_3.setBounds(121, 50, 101, 40);
+		panel_1.add(btnNewButton_3);
+		
+		JPanel panel_3 = new JPanel();
+		panel_3.setBounds(12, 140, 210, 90);
+		panel_1.add(panel_3);
+		panel_3.setLayout(null);
+		
+		JLabel lblNewLabel_2 = new JLabel("최근 재생 목록");
+		lblNewLabel_2.setBounds(12, 100, 210, 30);
+		panel_1.add(lblNewLabel_2);
+		list.setBounds(12, 140, 210, 90);
+		
+		panel_1.add(list);
+		
+		afterLog();
 	}
 
 	
@@ -126,14 +176,38 @@ public class Table2 extends JFrame {
 		String songlist = "노래목록불러오기";
 		Co.sendO(songlist);
 		
-	//-------------------------------------------------
-		
-//		ArrayList<String[]> tList = new ArrayList<>();
-//		tList = dao.tableList();
-//		for (int i = 0; i < tList.size(); i++) {
-//			tableModel.addRow(tList.get(i));
-//		} 
-
 	}
-
+	
+	
+	
+	private void afterLog() {
+		btnNewButton.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				String id = textField.getText();
+				String pw = textField_1.getText();
+				String idpw = id+"/"+pw+"/접속";
+				
+				Cc.send(idpw);
+				
+			}
+		});
+		
+		
+	}
+	
 }
+
+
+
+
+
+
+
+
+
+
+
+
+

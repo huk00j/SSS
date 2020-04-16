@@ -114,10 +114,15 @@ public class ServerC extends Thread {
 	
 	private void joincode(String jj) { // 명령어 분류하는 곳. // //일단 serverO로 이동.
 
-		if(jj.contains("계정")) {
+		if (jj.contains("계정")) {
 			String id = token(jj);//+"/계정확인";
 			sendBridge(id);
+		} else if (jj.contains("접속")) {
+			String log = tokenId(jj);
+			sendBridge(log);
 		}
+		
+		
 		
 		switch (jj) {
 		case "메인프레임":
@@ -154,4 +159,25 @@ public class ServerC extends Thread {
 		return k;
 	}
 
+	private String tokenId(String qq) {
+		String id = null;
+		String pw = null;
+		String checkk = null;
+		StringTokenizer st = new StringTokenizer(qq,"/");
+		while(st.hasMoreTokens()) {
+			id = st.nextToken();
+			pw = st.nextToken();
+			st.nextToken();
+		}
+		int check = lDAO.login(id, pw);
+		System.out.println(check + "  뭐가 나 오 니");
+		if(check == 1) {
+			checkk = "로그인성공";
+		} else {
+			checkk = "로그인실패";
+		}
+		return checkk;
+		
+	}
+	
 }
