@@ -115,7 +115,7 @@ public class Table2 extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				String jj = "회원가입신청";
 //				Cc.send(jj);	// 굳이 DB까지 갈 필요 없으니 ClientC로 보내지 않고, 여기서 객체 생성.
-				new Join2(tt);	// this 하면 액션리스너 자체가 보내진다??? 엥?
+				new Join2(tt, Cc);	// this 하면 액션리스너 자체가 보내진다??? 엥?
 			}
 		});
 	}

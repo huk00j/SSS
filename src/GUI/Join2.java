@@ -28,6 +28,8 @@ public class Join2 extends JFrame {
 	private JPanel contentPane;
 
 	public JLabel lblNewLabel_2, lblNewLabel_3, lblNewLabel_4;
+	public JLabel lblNewLabel_20;
+	
 	JTextField textField_1, textField_2;
 	JLabel lblNewLabel_5, lblNewLabel_6;
 	JButton btnNewButton_1;
@@ -37,6 +39,8 @@ public class Join2 extends JFrame {
 
 	ClientC Cc = null;
 	Table2 table = null;
+	
+	private Join2 join2; // ClientC 한테 Join2 본인 객체 주소를 넘길 것임.
 	
 	ActionListener action = null; //?????
 	
@@ -49,9 +53,15 @@ public class Join2 extends JFrame {
 	 */
 //	public Join2(ClientC cc) {
 //		this.Cc = cc;
+//	}
 
-	public Join2(Table2 tt) {
+	public Join2(Table2 tt, ClientC cc) {
 		this.table = tt;
+		this.Cc = cc;
+		
+		this.join2 = this;
+		Cc.jj2(join2);	// 일단 여기에서 ClientC 한테 주소 넘겨줌.
+		
 //		this.setVisible(true);
 //		this.setDefaultCloseOperation(this.DISPOSE_ON_CLOSE);
 
@@ -105,27 +115,34 @@ public class Join2 extends JFrame {
 //		ins();
 	}
 
-	public void checkA() {
-		lblNewLabel_2 = new JLabel("이미 존재하는 계정입니다.");
-		lblNewLabel_2.setFont(new Font("굴림", Font.PLAIN, 12));
-		lblNewLabel_2.setForeground(Color.RED);
-		lblNewLabel_2.setBounds(50, 75, 150, 15);
-		contentPane.add(lblNewLabel_2);
-		lblNewLabel_2.setVisible(false);
-
-		lblNewLabel_3 = new JLabel("사용 가능한 계정입니다.");
-		lblNewLabel_3.setFont(new Font("굴림", Font.PLAIN, 12));
-		lblNewLabel_3.setForeground(Color.BLUE);
-		lblNewLabel_3.setBounds(50, 75, 140, 15);
-		contentPane.add(lblNewLabel_3);
-		lblNewLabel_3.setVisible(false);
-
-		lblNewLabel_4 = new JLabel("아이디를 입력하세요.");
-		lblNewLabel_4.setFont(new Font("굴림", Font.PLAIN, 12));
-		lblNewLabel_4.setForeground(Color.MAGENTA);
-		lblNewLabel_4.setBounds(60, 75, 140, 15);
-		contentPane.add(lblNewLabel_4);
-		lblNewLabel_4.setVisible(false);
+	private void checkA() {
+		
+		lblNewLabel_20 = new JLabel("");
+		lblNewLabel_20.setFont(new Font("굴림", Font.PLAIN, 12));
+//		lblNewLabel_20.setForeground(Color.MAGENTA);
+		lblNewLabel_20.setBounds(50, 75, 150, 15);
+		contentPane.add(lblNewLabel_20);
+		
+//		lblNewLabel_2 = new JLabel("이미 존재하는 계정입니다.");
+//		lblNewLabel_2.setFont(new Font("굴림", Font.PLAIN, 12));
+//		lblNewLabel_2.setForeground(Color.RED);
+//		lblNewLabel_2.setBounds(50, 75, 150, 15);
+//		contentPane.add(lblNewLabel_2);
+//		lblNewLabel_2.setVisible(false);
+//
+//		lblNewLabel_3 = new JLabel("사용 가능한 계정입니다.");
+//		lblNewLabel_3.setFont(new Font("굴림", Font.PLAIN, 12));
+//		lblNewLabel_3.setForeground(Color.BLUE);
+//		lblNewLabel_3.setBounds(50, 75, 140, 15);
+//		contentPane.add(lblNewLabel_3);
+//		lblNewLabel_3.setVisible(false);
+//
+//		lblNewLabel_4 = new JLabel("아이디를 입력하세요.");
+//		lblNewLabel_4.setFont(new Font("굴림", Font.PLAIN, 12));
+//		lblNewLabel_4.setForeground(Color.MAGENTA);
+//		lblNewLabel_4.setBounds(60, 75, 140, 15);
+//		contentPane.add(lblNewLabel_4);
+//		lblNewLabel_4.setVisible(false);
 
 		lblNewLabel_5 = new JLabel("비밀번호가 일치하지 않습니다.");
 		lblNewLabel_5.setFont(new Font("굴림", Font.PLAIN, 12));
@@ -176,58 +193,32 @@ public class Join2 extends JFrame {
 	}
 
 	
-	int qq = 0 ;
-	public void ActionID() {	//--------------------------------------- 계정 중복 체크용.
+	public boolean blankId = false;	// id 공백 체크 && 중복 체크 눌렀는지.
+	private void ActionID() {	//--------------------------------------- 계정 중복 체크용.
 		btnNewButton.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				
-				String idcc = "계정중복확인/";
-				String idccc = txtAsdfdsfd.getText();
-//				Cc.send(idcc+idccc);
-				
-				//------------------------------------------------------
-				
 				String in = txtAsdfdsfd.getText();
 
 				if (txtAsdfdsfd.getText().equals("")) {
-					lblNewLabel_2.setVisible(false);
-					lblNewLabel_3.setVisible(false);
-					lblNewLabel_4.setVisible(true);
-					cheId = 0;
+					String checkId = "아이디공백";
+					Cc.send(checkId);
+					
 				} else {
-					qq = 5;	// 꼭 중복 확인 눌러야 아이디 생성이 가능하게끔.
-					checkID(in);
+					blankId = true;
+					String idcc = in+"/계정";
+					Cc.send(idcc);
+					System.out.println("완료!!!");
 				}
 			}
 		});
 	}
 
-	int cheId = 0;
-
-	public void checkID(String in) {
-		int check = ldao.idCheck(in);
-		System.out.println(check + " << 뭐가 나오니");
-		if (check == 0) {
-			System.out.println("없는 아이디");
-			lblNewLabel_2.setVisible(false);
-			lblNewLabel_4.setVisible(false);
-			lblNewLabel_3.setVisible(true);
-			cheId = 5;
-		} else if (check == 1) {
-			System.out.println("이미 있는 아이디");
-			lblNewLabel_4.setVisible(false);
-			lblNewLabel_3.setVisible(false);
-			lblNewLabel_2.setVisible(true);
-			cheId = 0;
-		}
-	}
-
 	
-	int chePw = 0;	//-------------------------------------------------------- 중복 체크용.
-	int k = 0;
-	public void ActionPW1() {
+	boolean pw1 = false;
+	private void ActionPW1() {
 		textField_1.addKeyListener(new KeyListener() {
 			@Override
 			public void keyTyped(KeyEvent e) {
@@ -238,29 +229,26 @@ public class Join2 extends JFrame {
 				if (textField_1.getText().length() < 4) {
 					System.out.println("4자 이상이어야 합니다.");
 					lblNewLabel_11.setVisible(true); // 4글자 이상
-					lblNewLabel_7.setVisible(true); // 빨강
-					lblNewLabel_9.setVisible(false); // 파랑
-					k = 0;
+					lblNewLabel_7.setVisible(true); // 빨강 자물쇠
+					lblNewLabel_9.setVisible(false); // 파랑 자물쇠
+					
 				} else if (textField_1.getText().length() >= 4) {
-					k = 2;
+					pw1 = true;
 					System.out.println("4자 이상이다!!!");
 					lblNewLabel_11.setVisible(false); // 4글자 이상
+					//"사용 가능한 비밀번호입니다." 추가.
 					lblNewLabel_7.setVisible(false); // 빨강
 					lblNewLabel_9.setVisible(true); // 파랑
+					
 				}
-
-				if (k == 2) {
-					if (textField_1.getText().equals(textField_2.getText())) {
-						System.out.println("비밀번호 일치");
-						lblNewLabel_5.setVisible(false);
-						lblNewLabel_6.setVisible(true);
-
-						chePw = 5;
-					} else {
-						lblNewLabel_6.setVisible(false);
-						lblNewLabel_5.setVisible(true);
-						chePw = 0;
-					}
+				
+				// 이 부분은 아래 칸 자물쇠.
+				if(textField_1.getText().equals(textField_2.getText())) {
+					lblNewLabel_8.setVisible(false);// 빨간 자물쇠.
+					lblNewLabel_10.setVisible(true); // 파란 자물쇠.
+				}else {
+					lblNewLabel_10.setVisible(false); // 파란 자물쇠.
+					lblNewLabel_8.setVisible(true);	// 빨간 자물쇠.
 				}
 			}
 
@@ -270,7 +258,9 @@ public class Join2 extends JFrame {
 		});
 	}
 
-	public void ActionPW2() {
+	
+	boolean pw2 = false;
+	private void ActionPW2() {
 		textField_2.addKeyListener(new KeyListener() {
 			@Override
 			public void keyTyped(KeyEvent e) {
@@ -280,13 +270,13 @@ public class Join2 extends JFrame {
 			public void keyReleased(KeyEvent e) {
 				if (textField_1.getText().equals(textField_2.getText())) {
 					System.out.println("비밀번호 일치");
-					lblNewLabel_5.setVisible(false);
-					lblNewLabel_6.setVisible(true);
+					lblNewLabel_5.setVisible(false);	// 비밀번호가 일치하지 않습니다. 문구.
+					lblNewLabel_6.setVisible(true);		// 비밀번호가 일치합니다. 문구.
 
 					lblNewLabel_8.setVisible(false); // 빨간 자물쇠.
 					lblNewLabel_10.setVisible(true); // 파란 자물쇠.
 
-					chePw = 5;
+					pw2 = true;
 				} else {
 					System.out.println("비밀번호 일치하지 않아!");
 					lblNewLabel_6.setVisible(false);
@@ -295,9 +285,8 @@ public class Join2 extends JFrame {
 					lblNewLabel_8.setVisible(true); // 빨간 자물쇠.
 					lblNewLabel_10.setVisible(false); // 파란 자물쇠.
 
-					chePw = 0;
+					pw2 = false;
 				}
-
 			}
 			//실험용
 			@Override
@@ -306,30 +295,22 @@ public class Join2 extends JFrame {
 		});
 	}
 
-//	public void ins() {
-//		if (cheId == 5 && chePw == 5 && k == 2 && qq == 5) {
-//			insert();
-//		} else {
-//			System.out.println("아이디, 패스워드 체크");
-//		}
-//	}
-
-	public void insert() {
+	public boolean checkId = false;
+	private void insert() {
 		btnNewButton_1.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-//				String IdPw[] = new String[2];
-				if (cheId == 5 && chePw == 5 && k == 2 && qq == 5) {
-//					IdPw[0] = txtAsdfdsfd.getText();
+				if (blankId && checkId && pw1 && pw2) {
+					// id칸 공백 &&
 					String id = txtAsdfdsfd.getText();
 					txtAsdfdsfd.setText("");
-//					IdPw[1] = textField_2.getText();
 					String pw = textField_2.getText();
 					textField_1.setText("");
 					textField_2.setText("");
 
-					lblNewLabel_3.setVisible(false); // 파란색 id 글 제거.
+//					lblNewLabel_3.setVisible(false); // 파란색 id 글 제거.
+					lblNewLabel_20.setVisible(false);
 					lblNewLabel_6.setVisible(false); // 파란색 pw 글 제거.
 
 					int k = ldao.insertQ(id, pw);
@@ -339,12 +320,22 @@ public class Join2 extends JFrame {
 					} else {
 						System.out.println("insert 실패");
 					}
-
+					
+//					this.setDefaultCloseOperation(this.DISPOSE_ON_CLOSE);
+//					setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+//					setDefaultCloseOperation(join2.DISPOSE_ON_CLOSE);
+					
 				} else {
+					System.out.println(blankId + "  id");	// ID 입력 칸이 공백인가. true / false.
+					System.out.println(checkId + " checkId");
+					System.out.println(pw1 + " pw1");
+					System.out.println(pw2 + " pw2");
 					System.out.println("아이디 & 비밀번호 확인"); // 이 부분 Label 추가.
 				}
 			}
 		});
 	}
 
+	
+	
 }

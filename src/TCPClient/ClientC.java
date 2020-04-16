@@ -1,5 +1,6 @@
 package TCPClient;
 
+import java.awt.Color;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -99,39 +100,6 @@ public class ClientC extends Thread {
 
 //=========== 밑으로 send & receive & 명령어 ======================================================
 
-/*	public void rec() { // 직렬화로 object 받는 곳.
-		try {
-			input = socket.getInputStream();
-			byte[] bb = new byte[1024];
-			input.read(bb);
-
-			binput = new ByteArrayInputStream(bb);
-			ois = new ObjectInputStream(binput);
-			System.out.println(ois + " --- 확인 111");
-
-			try {
-				object = ois.readObject();
-				System.out.println(object + " --- 확인 222");
-//////				DTO dto = (DTO) object;	// 여기서 에러.
-//////				String[] dto = (String[]) object; // 변경.
-				ArrayList<String[]> dto = (ArrayList<String[]>) object;
-				// String으로 주었기 때문에 String으로 받아야 함.
-
-				System.out.println("///////");
-
-				for (int i = 0; i < dto.size(); i++) {
-					table2.tableModel.addRow(dto.get(i));
-				}
-
-			} catch (ClassNotFoundException e) {
-				e.printStackTrace();
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
-	} */
-
 	private void receive() {
 		new Thread(new Runnable() {
 
@@ -157,31 +125,73 @@ public class ClientC extends Thread {
 		}).start();
 	}
 
+	
+	public void jj2(Join2 join) {
+		this.join2 = join;	// 일단 이렇게 Join2 주소를 받았는데, 이렇게도 괜찮은건가.
+	}
+	
 	public void send(String order) {	// normal 명령문 output.	// ClientO로 이동.
 		try {
 			output = socket.getOutputStream();
 			output.write(order.getBytes());
-
+			
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
 
+	
 	public void codejoin(String order) {
 
 		switch (order) {
+//		case "아이디공백":
+//			System.out.println("공백 받았습니다!");
+//			join2.lblNewLabel_2.setVisible(false);
+//			join2.lblNewLabel_3.setVisible(false);
+//			join2.lblNewLabel_4.setVisible(true);
+//			break;
+//			
+//		case "0":
+//			join2.checkId = true;
+//			System.out.println("없는 아이디");
+//			join2.lblNewLabel_2.setVisible(false);
+//			join2.lblNewLabel_4.setVisible(false);
+//			join2.lblNewLabel_3.setVisible(true);
+//			break;
+//			
+//		case "1":
+//			join2.checkId = false;
+//			System.out.println("이미 있는 아이디");
+//			join2.lblNewLabel_4.setVisible(false);
+//			join2.lblNewLabel_3.setVisible(false);
+//			join2.lblNewLabel_2.setVisible(true);
+//			break;
+		
+		
+		//------------------------------------------- visible이 아닌 set으로 변경해봅시다.
+		case "아이디공백":
+			join2.lblNewLabel_20.setText("아이디를 입력하세요.");
+			join2.lblNewLabel_20.setForeground(Color.MAGENTA);
+			break;
+		
+		case "0":
+			join2.checkId = true;
+			join2.lblNewLabel_20.setText("사용 가능한 계정입니다.");
+			join2.lblNewLabel_20.setForeground(Color.BLUE);
+			break;
+		
+		case "1":
+			join2.checkId = false;
+			join2.lblNewLabel_20.setText("이미 사용중인 계정입니다.");
+			join2.lblNewLabel_20.setForeground(Color.RED);
+			break;
+			
+		//------------ 까지 비밀번호 ------------------------
+			
 //		case "회원가입수락":
 //			join2 = new Join2(this);
 //			break;
 
-//		case "노래목록수락":
-//			sDAO = new SongDAO();	// 여기에 dao 객체 생성.
-//			ArrayList<String[]> tList = new ArrayList<>();
-//			tList = sDAO.tableList();
-//			for (int i = 0; i < tList.size(); i++) {
-//				table2.tableModel.addRow(tList.get(i));
-//			}
-//			break;
 
 		default:
 			break;
@@ -189,4 +199,5 @@ public class ClientC extends Thread {
 
 	}
 
+	
 }
