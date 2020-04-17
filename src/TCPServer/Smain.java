@@ -13,7 +13,7 @@ public class Smain {
 		ServerSocket server = new ServerSocket();
 		Socket socket = null;
 		
-		server.bind(new InetSocketAddress("10.0.0.120", 9999));
+		server.bind(new InetSocketAddress("10.0.0.120", 9997));
 		
 		while(true) {
 			System.out.println("accept 대기중~");

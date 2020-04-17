@@ -51,9 +51,6 @@ public class ClientC extends Thread {
 	@Override
 	public void run() {
 		streamset();
-
-//////	rec();	// ClientO 로 이동.
-//		receive();
 	}
 
 	private void streamset() { // normal & object 소켓 나누기 위한 포트넘버 받아서 분류하는 곳.

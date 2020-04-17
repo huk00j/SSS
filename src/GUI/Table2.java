@@ -3,6 +3,8 @@ package GUI;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -17,19 +19,25 @@ import javax.swing.table.DefaultTableModel;
 
 import TCPClient.ClientC;
 import TCPClient.ClientO;
-import javax.swing.JList;
 
 public class Table2 extends JFrame {
 
 	String header[] = { "No", "곡명", "가수명", "장르", "앨범" };
-	public DefaultTableModel tableModel = new DefaultTableModel(null, header);
+	String header2[] = { "곡명", "가수명", "장르", "앨범" };
+	
+	public DefaultTableModel tableModel = new DefaultTableModel(null, header) {
+		public boolean isCellEditable(int a, int b) { // isCellEditable 테이블 변화를 막는다.
+			return false;
+		}
+	};
+
 	JTable table = new JTable(tableModel);
 	JScrollPane tableScroll = new JScrollPane(table);
 
 	private JPanel contentPane;
-	public JPanel panel = new JPanel();	// 클라이언트에서 변경하기 위해 private -> public 변경.
+	public JPanel panel = new JPanel(); // 클라이언트에서 변경하기 위해 private -> public 변경.
 	private final JLabel lblNewLabel = new JLabel("ID");
-	public JTextField textField = new JTextField();	// ID 가져와서 띄워주기 위함.
+	public JTextField textField = new JTextField(); // ID 가져와서 띄워주기 위함.
 	private final JLabel lblNewLabel_1 = new JLabel("PW");
 	private final JTextField textField_1 = new JTextField();
 	private final JButton btnNewButton = new JButton("로그인");
@@ -38,55 +46,41 @@ public class Table2 extends JFrame {
 
 	ClientC Cc = null;
 	ClientO Co = null;
-	
+
 	public final JLabel lblNewLabel_3 = new JLabel("");
 
-	public JPanel panel_1;	// 로그인 후에 나오는 창.
+	public JPanel panel_1; // 로그인 후에 나오는 창.
 	private final JButton btnNewButton_6 = new JButton("재생");
 	private final JButton btnNewButton_7 = new JButton("정지");
 
-	private final JPanel panel_2 = new JPanel();
-	
-	public DefaultTableModel tableModel_1;
-	
-	
-	
-	
-	
+
 	/**
 	 * Launch the application.
 	 */
-/*	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					Table2 frame = new Table2();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-*/
+	/*
+	 * public static void main(String[] args) { EventQueue.invokeLater(new
+	 * Runnable() { public void run() { try { Table2 frame = new Table2();
+	 * frame.setVisible(true); } catch (Exception e) { e.printStackTrace(); } } });
+	 * }
+	 */
 	/**
 	 * Create the frame.
-	 * @param clientO 
-	 * @param clientC 
+	 * 
+	 * @param clientO
+	 * @param clientC
 	 */
-	
-	
+
 	public Table2(ClientC ClientC, ClientO clientO) {
 		this.Cc = ClientC;
 		this.Co = clientO;
-		this.tt = this;	// 회원가입시 override 때문에 this가 ActionListner가 나오기 때문.
-		
+		this.tt = this; // 회원가입시 override 때문에 this가 ActionListner가 나오기 때문.
+
 		table();
 
 		textField_1.setBounds(85, 60, 115, 30);
 		textField_1.setColumns(10);
 		panel.add(textField_1);
-		
+
 		textField.setBounds(85, 20, 115, 30);
 		textField.setColumns(10);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -102,7 +96,7 @@ public class Table2 extends JFrame {
 
 		contentPane.add(panel);
 		panel.setLayout(null);
-		
+
 		lblNewLabel.setFont(new Font("굴림", Font.PLAIN, 14));
 		lblNewLabel.setBounds(30, 20, 43, 28);
 		panel.add(lblNewLabel);
@@ -117,90 +111,108 @@ public class Table2 extends JFrame {
 
 		btnNewButton_1.setBounds(121, 126, 100, 58);
 		panel.add(btnNewButton_1);
-		
+
 		lblNewLabel_3.setBounds(12, 93, 209, 26);
 		lblNewLabel_3.setFont(new Font("굴림", Font.PLAIN, 12));
-		
+
 		panel.add(lblNewLabel_3);
-		
+
 		btnNewButton_6.setBounds(512, 490, 97, 62);
 		contentPane.add(btnNewButton_6);
 
 		btnNewButton_7.setBounds(625, 490, 97, 62);
 		contentPane.add(btnNewButton_7);
-		
+
 //		contentPane.setVisible(true);	// 필요 없는 듯.
 
 		this.setVisible(true); // 창 보여주기.
 
 		// -------- 노래 리스트 --------------------------------------------
-		
-//		panel_2.setBounds(500, 220, 234, 217);
-//		contentPane.add(panel_2);
-//		panel_2.setLayout(null);
-//		
-//		JScrollPane scrollPane = new JScrollPane();
-//		scrollPane.setBounds(12, 10, 210, 197);
-//		panel_2.add(scrollPane);
-//		
-////		table_1 = new JTable();
-////		scrollPane.setColumnHeaderView(table_1);
-//		
-////		tableModel_1 = new DefaultTableModel(null, null);
-		
-		
-		
-		
-		//--------------------------------------------------------------
-		
-		logQ();	// 로그인했을 때 창.
+
+		sList();
+		// --------------------------------------------------------------
+
+		logQ(); // 로그인했을 때 창.
 		joinQ(); // 회원가입 버튼.
 		afterLog(); // 로그인 버튼.
-		
+
 	}
-	
+
 	public String guest = "";
-	private JTable table_1;
+//	private final JTable table_1 = new JTable();
+
 	public void logQ() {
-		
+
 		panel_1 = new JPanel();
-		panel_1.setBounds(500, 0, 233,210);
+		panel_1.setBounds(500, 0, 233, 210);
 		contentPane.add(panel_1);
 		panel_1.setLayout(null);
 		panel_1.setVisible(false); // 로그인 후 나오는 창.
-		
-		
+
 		JLabel lblNewLabel_2 = new JLabel(guest + "님 환영합니다.");
 		lblNewLabel_2.setFont(new Font("굴림", Font.PLAIN, 12));
 		lblNewLabel_2.setHorizontalAlignment(SwingConstants.CENTER);
 		lblNewLabel_2.setBounds(12, 10, 210, 30);
 		panel_1.add(lblNewLabel_2);
-		
+
 		JButton btnNewButton_2 = new JButton("내 정보");
 		btnNewButton_2.setFont(new Font("굴림", Font.PLAIN, 12));
 		btnNewButton_2.setBounds(12, 50, 97, 35);
 		panel_1.add(btnNewButton_2);
-		
+
 		JButton btnNewButton_3 = new JButton("로그 아웃");
 		btnNewButton_3.setFont(new Font("굴림", Font.PLAIN, 12));
 		btnNewButton_3.setBounds(121, 50, 97, 35);
 		panel_1.add(btnNewButton_3);
-		
+
 		JButton btnNewButton_4 = new JButton("최근 재생");
 		btnNewButton_4.setFont(new Font("굴림", Font.PLAIN, 12));
 		btnNewButton_4.setBounds(12, 95, 97, 35);
 		panel_1.add(btnNewButton_4);
-		
+
 		JButton btnNewButton_5 = new JButton("추천 목록");
 		btnNewButton_5.setFont(new Font("굴림", Font.PLAIN, 12));
 		btnNewButton_5.setBounds(121, 95, 97, 35);
 		panel_1.add(btnNewButton_5);
 		
 		
+	}
 
+	public void sList() {
+		
+		JPanel panel_2 = new JPanel();
+		panel_2.setBounds(500, 220, 233, 222);
+		contentPane.add(panel_2);
+		panel_2.setLayout(null);
+		
+		String abc[][] = { {"아아"}};
+		
+		DefaultTableModel tableModel_1 = new DefaultTableModel(abc, header2);
+		JTable table_1 = new JTable(tableModel_1);
+		JScrollPane scrollPane2 = new JScrollPane(table_1);
+		scrollPane2.setBounds(12, 10, 209, 202);
+
+		//		scrollPane2.add(table_1);	// 망할 이 녀석 때문임.
+		
+		panel_2.add(scrollPane2);
+		
+		table_1.getTableHeader().setVisible(false);	// 이렇게 해줘야 헤더가 사라짐. // 다시 true로 바꿔보자.
+		
 	}
 	
 	
+	public void mClick() {
+		table.addMouseListener(new MouseAdapter() {
+			public void mouseClicked(MouseEvent e) {
+				if (e.getClickCount() == 2) {
+					int column = table.getSelectedColumn();
+					int row = table.getSelectedRow();
+
+				}
+			}
+		});
+	}
+
 	public void joinQ() { // 회원 가입
 		btnNewButton_1.addActionListener(new ActionListener() {
 
@@ -208,48 +220,29 @@ public class Table2 extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				String jj = "회원가입신청";
 //				Cc.send(jj);	// 굳이 DB까지 갈 필요 없으니 ClientC로 보내지 않고, 여기서 객체 생성.
-				new Join2(tt, Cc);	// this 하면 액션리스너 자체가 보내진다??? 엥?
+				new Join2(tt, Cc); // this 하면 액션리스너 자체가 보내진다??? 엥?
 			}
 		});
 	}
 
-	
 	public void table() {
-		Co.Taddress(this);	// ClientO 한테 Table2 주소 알려주기.
-		
+		Co.Taddress(this); // ClientO 한테 Table2 주소 알려주기.
+
 		String songlist = "노래목록불러오기";
 		Co.sendO(songlist);
-		
 	}
-	
-	
+
 	private void afterLog() {
 		btnNewButton.addActionListener(new ActionListener() {
-			
+
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				String id = textField.getText();
 				String pw = textField_1.getText();
-				String idpw = id+"/"+pw+"/접속";
-				
+				String idpw = id + "/" + pw + "/접속";
+
 				Cc.send(idpw);
-				
 			}
 		});
-		
-		
 	}
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
