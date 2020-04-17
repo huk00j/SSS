@@ -14,6 +14,7 @@ import GUI.Table2;
 
 public class ClientC extends Thread {
 
+	String IDing;	// 현재 로그인 한 계정.
 	Socket socket = null;
 	OutputStream output = null;
 	InputStream input = null;
@@ -162,6 +163,10 @@ public class ClientC extends Thread {
 		case "로그인성공":
 			System.out.println("라라라라라라ㅏ라");
 			table2.panel.setVisible(false);
+			
+			IDing = table2.textField.getText();	// 현재 로그인 한 계정.
+			table2.guest = IDing;
+			table2.logQ();
 			table2.panel_1.setVisible(true);
 			break;
 		case "로그인실패":

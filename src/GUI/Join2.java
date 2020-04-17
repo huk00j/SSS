@@ -295,6 +295,10 @@ public class Join2 extends JFrame {
 					if (k == 1) {
 						System.out.println("insert 성공");
 						join2.dispose();
+						
+						ElseWindow ew = new ElseWindow();
+						ew.elseJoin();
+						
 					} else {
 						System.out.println("insert 실패");
 					}
