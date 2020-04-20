@@ -17,7 +17,6 @@ public class SongDAO {
 //	ServerC Sc = null;
 	private static SongDAO sDAO = null;
 
-	
 	public SongDAO() {
 //		Sc = serverC;
 		start();
@@ -74,6 +73,43 @@ public class SongDAO {
 		return list;
 	}
 
+	public int listenList(DTO dto) {
+//		String qwe[] = new String[4];
+//		dto.cyclist();
+		if (connect()) {
+			String sql = "insert into popular values(?, ?, ?, ?)";
+			try {
+				ppsm = conn.prepareStatement(sql);
+				ppsm.setString(1, dto.getId());
+				ppsm.setString(2, dto.getTitle());
+				ppsm.setString(3, dto.getName());
+				ppsm.setString(4, dto.getGenre());
+				int k =ppsm.executeUpdate();
+				
+				return k;
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		return 0;
+	}
+	
+	
+	public void logSongList(String sName) {
+		if (connect()) {
+			String sql = "select title, name, genre from popular where id = ?";
+			try {
+				ppsm = conn.prepareStatement(sql);
+				ppsm.setString(1, sName);
+				ppsm.executeUpdate();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	
 	public static SongDAO sigleton() {
 		if (sDAO == null) {
 			sDAO = new SongDAO();

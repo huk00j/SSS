@@ -1,14 +1,17 @@
 package TCPServer;
 
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Random;
 
+import DB.DTO;
 import DB.SongDAO;
 
 public class ServerO extends Thread {
@@ -22,9 +25,11 @@ public class ServerO extends Thread {
 	// 직렬화 -----
 	ObjectOutputStream oos; // 직렬화
 
-	Random r = new Random();
-
+	Object object;
+	ObjectInputStream ois;
+	ByteArrayInputStream binput = null;
 	// -----------
+	Random r = new Random();
 
 	ServerO(Socket socket) {
 		this.socketSo = socket;
@@ -36,6 +41,7 @@ public class ServerO extends Thread {
 	@Override
 	public void run() {
 		bridge();
+		listen();
 	}
 
 	public void bridge() { // normal 명령어 받는 곳. //일단 serverO로 이동.
@@ -46,19 +52,41 @@ public class ServerO extends Thread {
 			String order = new String(bb);
 			order = order.trim();
 			codeSo(order); // 명령어 분류.
-
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
 
+	private void listen() {
+		try {
+			while (true) {
+				inputSo = socketSo.getInputStream();
+				byte[] bb = new byte[1024];
+				inputSo.read(bb);
+
+				binput = new ByteArrayInputStream(bb);
+				ois = new ObjectInputStream(binput);
+
+				try {
+					object = ois.readObject();
+					DTO dto = (DTO) object;
+					sDAO.listenList(dto);
+					
+				} catch (ClassNotFoundException e) {
+					e.printStackTrace();
+				}
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	
 	private void codeSo(String order) {
-		switch (order) {
-		case "노래목록불러오기":
+		if (order.contains("노래목록불러오기")) {
 //			sDAO = new SongDAO(this); // 여기에 dao 객체 생성.
-			sDAO = SongDAO.sigleton();	// 싱글톤	// 크~.
+			sDAO = SongDAO.sigleton(); // 싱글톤 // 크~.
 			ArrayList<String[]> slist = sDAO.tableList();
-			
 			try {
 				ByteArrayOutputStream baos = new ByteArrayOutputStream();
 				oos = new ObjectOutputStream(baos);
@@ -71,10 +99,7 @@ public class ServerO extends Thread {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-//★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆
-
 		}
-
 	}
 
 }

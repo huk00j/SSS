@@ -14,7 +14,9 @@ import GUI.Table2;
 
 public class ClientC extends Thread {
 
-	String IDing;	// 현재 로그인 한 계정.
+	public String IDing; // 현재 로그인 한 계정.
+	public Boolean loging = false;
+
 	Socket socket = null;
 	OutputStream output = null;
 	InputStream input = null;
@@ -38,14 +40,18 @@ public class ClientC extends Thread {
 
 	int qq = 0; // object.
 	// -----------------------------------------------
-
+	ClientC Cc;
+	
+	
 	public ClientC(Socket socket) {
 		this.socket = socket;
 		run();
 	}
 
 	private void table() {
+		this.Cc = this;
 		table2 = new Table2(this, clientO);
+//		divid();	// 노래 선택하는 곳.
 	}
 
 	@Override
@@ -76,18 +82,18 @@ public class ClientC extends Thread {
 
 	private void second() {
 		forkCO();
-		table();	// N & O 서버*클라이언트 만들었으면 메인 프레임 생성.
-		receive();	// 명령어 받기 시작.
+		table(); // N & O 서버*클라이언트 만들었으면 메인 프레임 생성.
+		receive(); // 명령어 받기 시작.
 	}
 
-	private void forkCO() { // object 소켓 접속.	// new Runnalbe 없애야하나?
+	private void forkCO() { // object 소켓 접속. // new Runnalbe 없애야하나?
 		new Thread(new Runnable() {
 
 			@Override
 			public void run() {
 				try {
 					Osocket = new Socket("10.0.0.120", qq);
-					clientO = new ClientO(Osocket);
+					clientO = new ClientO(Osocket, Cc);
 
 				} catch (IOException e) {
 					e.printStackTrace();
@@ -123,25 +129,23 @@ public class ClientC extends Thread {
 		}).start();
 	}
 
-	
 	public void jj2(Join2 join) {
-		this.join2 = join;	// 일단 이렇게 Join2 주소를 받았는데, 이렇게도 괜찮은건가.
+		this.join2 = join; // 일단 이렇게 Join2 주소를 받았는데, 이렇게도 괜찮은건가.
 	}
-	
-	public void send(String order) {	// normal 명령문 output.	// ClientO로 이동.
+
+	public void send(String order) { // normal 명령문 output. // ClientO로 이동.
 		try {
 			output = socket.getOutputStream();
 			output.write(order.getBytes());
-			
+
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
 
-	
 	public void codejoin(String order) {
 
-		switch (order) { //---------- visible이 아닌 set으로 변경.
+		switch (order) { // ---------- visible이 아닌 set으로 변경.
 		case "아이디공백":
 			join2.lblNewLabel_20.setText("아이디를 입력하세요.");
 			join2.lblNewLabel_20.setForeground(Color.MAGENTA);
@@ -156,16 +160,27 @@ public class ClientC extends Thread {
 			join2.lblNewLabel_20.setText("이미 사용중인 계정입니다.");
 			join2.lblNewLabel_20.setForeground(Color.RED);
 			break;
-			
+
 		case "로그인성공":
+			loging = true;
+			table2.loginID = true;
 			System.out.println("라라라라라라ㅏ라");
-			table2.panel.setVisible(false);
-			
-			IDing = table2.textField.getText();	// 현재 로그인 한 계정.
-			table2.guest = IDing;
-			table2.logQ();
-			table2.panel_1.setVisible(true);
-			break;
+
+			if (loging) {
+				table2.panel.setVisible(false);
+
+				IDing = table2.textField.getText(); // 현재 로그인 한 계정.
+				table2.guest = IDing;
+				table2.logQ();
+				table2.nonguest();	// 로그인시 리스트 제거.
+				table2.panel_1.setVisible(true);
+				System.out.println(loging +" 로그인성공 loging");
+				
+//				send(loging+"로그인음원리스트");
+//				clientO.sendO(order);
+				
+				break;
+			}
 		case "로그인실패":
 			System.out.println("와와와와오아아와와와");
 			table2.lblNewLabel_3.setText("가입하지 않은 아이디거나 잘못된 번호입니다.");
@@ -176,6 +191,7 @@ public class ClientC extends Thread {
 		}
 
 	}
-
 	
 }
+
+

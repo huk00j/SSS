@@ -121,8 +121,7 @@ public class ServerC extends Thread {
 			String log = tokenId(jj);
 			sendBridge(log);
 		}
-		
-		
+				
 		
 		switch (jj) {
 		case "메인프레임":
@@ -131,24 +130,13 @@ public class ServerC extends Thread {
 		case "아이디공백":
 			sendBridge(jj);
 			break;
-			
-			
-//		case jj.contians("계정"):
-//			sendBridge(jj);
-//			break;
-			
-//		case "회원가입신청":
-//			this.check = "회원가입수락";
-//			break;
-//		case "계정중복확인":
-//			break;
 		default:
 			break;
 		}
 
 	}
 	
-	private String token(String jj) {
+	private String token(String jj) {	// 회원가입시.
 		String a = null;
 		StringTokenizer st = new StringTokenizer(jj, "/");
 		while(st.hasMoreTokens()) {
@@ -159,7 +147,7 @@ public class ServerC extends Thread {
 		return k;
 	}
 
-	private String tokenId(String qq) {
+	private String tokenId(String qq) {	// 로그인시.
 		String id = null;
 		String pw = null;
 		String checkk = null;

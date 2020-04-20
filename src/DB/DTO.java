@@ -81,4 +81,14 @@ public class DTO implements Serializable {
 		return turnData2;
 	}
 	
+	public String[] cyclist() {
+		String turnData3[] = new String[4];
+		turnData3[0] = this.id;
+		turnData3[1] = this.title;
+		turnData3[2] = this.name;
+		turnData3[3] = this.genre;
+		
+		return turnData3;
+	}
+	
 }

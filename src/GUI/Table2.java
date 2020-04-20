@@ -5,6 +5,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.util.ArrayList;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -14,16 +16,19 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
+import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
 import TCPClient.ClientC;
 import TCPClient.ClientO;
+import javax.swing.ScrollPaneConstants;
 
 public class Table2 extends JFrame {
 
 	String header[] = { "No", "곡명", "가수명", "장르", "앨범" };
-	String header2[] = { "곡명", "가수명", "장르", "앨범" };
+	String header2[] = { "곡명", "가수명", "장르"};
+	public String header4[] = new String[3];
 	
 	public DefaultTableModel tableModel = new DefaultTableModel(null, header) {
 		public boolean isCellEditable(int a, int b) { // isCellEditable 테이블 변화를 막는다.
@@ -31,7 +36,7 @@ public class Table2 extends JFrame {
 		}
 	};
 
-	JTable table = new JTable(tableModel);
+	public JTable table = new JTable(tableModel);
 	JScrollPane tableScroll = new JScrollPane(table);
 
 	private JPanel contentPane;
@@ -52,8 +57,12 @@ public class Table2 extends JFrame {
 	public JPanel panel_1; // 로그인 후에 나오는 창.
 	private final JButton btnNewButton_6 = new JButton("재생");
 	private final JButton btnNewButton_7 = new JButton("정지");
+	JTable table_1;
+	public DefaultTableModel tableModel_1;
 
-
+	public Boolean loginID;
+	
+	
 	/**
 	 * Launch the application.
 	 */
@@ -84,7 +93,7 @@ public class Table2 extends JFrame {
 		textField.setBounds(85, 20, 115, 30);
 		textField.setColumns(10);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(50, 200, 750, 600);
+		setBounds(50, 50, 750, 600);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -123,18 +132,18 @@ public class Table2 extends JFrame {
 		btnNewButton_7.setBounds(625, 490, 97, 62);
 		contentPane.add(btnNewButton_7);
 
-//		contentPane.setVisible(true);	// 필요 없는 듯.
-
 		this.setVisible(true); // 창 보여주기.
 
 		// -------- 노래 리스트 --------------------------------------------
 
-		sList();
+		sList();	// 오른쪽 테이블 만들기.
 		// --------------------------------------------------------------
 
 		logQ(); // 로그인했을 때 창.
 		joinQ(); // 회원가입 버튼.
 		afterLog(); // 로그인 버튼.
+		
+		mClick(); // 마우스 더블 클릭. -> 왼쪽 테이블 값을 오른쪽 테이블 값에 띄워주기.
 
 	}
 
@@ -185,34 +194,61 @@ public class Table2 extends JFrame {
 		contentPane.add(panel_2);
 		panel_2.setLayout(null);
 		
-		String abc[][] = { {"아아"}};
-		
-		DefaultTableModel tableModel_1 = new DefaultTableModel(abc, header2);
-		JTable table_1 = new JTable(tableModel_1);
-		JScrollPane scrollPane2 = new JScrollPane(table_1);
-		scrollPane2.setBounds(12, 10, 209, 202);
+		tableModel_1 = new DefaultTableModel(null, header2){
+			public boolean isCellEditable(int a, int b) { // isCellEditable 테이블 변화를 막는다.
+				return false;
+			}
+		};
+		table_1 = new JTable(tableModel_1);
+		JScrollPane scrollPane2 = new JScrollPane(table_1) ; /*{
+				public void setBorder(Border border){	// 테두리 실선 제거하는 방법.
+		}
+	}; */
+	
+		scrollPane2.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+		scrollPane2.setBounds(12, 10, 210, 202);
 
-		//		scrollPane2.add(table_1);	// 망할 이 녀석 때문임.
+		//		scrollPane2.add(table_1);	// 망할 이 녀석 때문.
 		
 		panel_2.add(scrollPane2);
 		
-		table_1.getTableHeader().setVisible(false);	// 이렇게 해줘야 헤더가 사라짐. // 다시 true로 바꿔보자.
+//		table_1.getTableHeader().setVisible(false);	// 이렇게 해줘야 헤더가 사라진다. // 다시 true로 바꿔보자.
+		table_1.setShowVerticalLines(false);
+		table_1.setShowHorizontalLines(false);
 		
 	}
 	
+	public void viewList() {
+		
+	}
 	
-	public void mClick() {
+	public void nonguest() {	// 로그인시 리스트 제거.
+		final int rowNum = tableModel_1.getRowCount();
+		for(int i = 0 ; i < rowNum ; i++) {
+			System.out.println(rowNum);
+			tableModel_1.removeRow(0);
+		}
+	}
+	
+	
+	public void mClick() {	// table 에서 목록 더블 클릭시 오른쪽 재생목록에 추가.
 		table.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) {
 				if (e.getClickCount() == 2) {
-					int column = table.getSelectedColumn();
 					int row = table.getSelectedRow();
-
+					for(int i = 0 ; i < 3; i++) {
+						header4[i] = (String) table.getValueAt(row, i+1);
+					}
+					Co.divid(header4);
+					
 				}
 			}
-		});
+		}); 
 	}
-
+	
+	
+// ☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★☆★
+	
 	public void joinQ() { // 회원 가입
 		btnNewButton_1.addActionListener(new ActionListener() {
 
@@ -224,6 +260,7 @@ public class Table2 extends JFrame {
 			}
 		});
 	}
+	
 
 	public void table() {
 		Co.Taddress(this); // ClientO 한테 Table2 주소 알려주기.
@@ -232,6 +269,7 @@ public class Table2 extends JFrame {
 		Co.sendO(songlist);
 	}
 
+	
 	private void afterLog() {
 		btnNewButton.addActionListener(new ActionListener() {
 
